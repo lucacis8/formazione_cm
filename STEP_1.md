@@ -22,7 +22,7 @@ Assicurati di avere i seguenti strumenti installati sulla tua macchina:
 Prima di tutto, clona il repository che contiene il playbook:
 
 ```bash
-git clone https://github.com/tuo-utente/formazione_cm.git
+git clone https://github.com/lucacis8/formazione_cm
 cd formazione_cm
 ```
 
