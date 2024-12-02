@@ -1,0 +1,33 @@
+---
+- name: Configurare Docker e avviare un container
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Avvia un contenitore Docker hello-world
+      docker_container:
+        name: hello-world-container
+        image: hello-world
+        state: started
+    
+    - name: Pull dell'immagine hello-world
+      docker_image:
+        name: hello-world
+        source: pull
+    
+    - name: Esegui il contenitore hello-world
+      docker_container:
+        name: hello-world-container
+        image: hello-world
+        state: started
+        restart_policy: always
+
+    - name: Avvia un Docker registry locale
+      docker_container:
+        name: registry
+        image: registry:2
+        state: started
+        exposed_ports:
+          - "5000"
+        published_ports:
+          - "5000:5000"
+        restart_policy: always
