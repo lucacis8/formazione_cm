@@ -16,7 +16,7 @@ Questo esercizio si concentra sulla creazione di due container Docker (uno basat
 Clonare il repository `formazione_cm`:
 
 ```bash
-git clone https://github.com/lucacis8/formazione_cm.git
+git clone https://github.com/lucacis8/formazione_cm
 cd formazione_cm
 ```
 
