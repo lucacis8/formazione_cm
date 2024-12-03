@@ -30,7 +30,7 @@ All’interno del repository troverai i seguenti file e cartelle:
 Per permettere l’accesso ai container tramite SSH, devi creare una coppia di chiavi SSH. Esegui il seguente comando per generare le chiavi:
 
 ```bash
-ssh-keygen -t rsa -b 4096 -f id_key_genericuser -C "genericuser@example.com"
+ssh-keygen -t rsa -b 4096 -C "genericuser@example.com" -f id_key_genericuser
 ```
 
 Questo creerà due file:
