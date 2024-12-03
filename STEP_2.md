@@ -84,6 +84,6 @@ Sostituisci `<numero-linea>` con il numero di linea corrispondente al messaggio 
 ## Note finali
 
 Questo esercizio è stato progettato per familiarizzare con:
-	•	La configurazione di container Docker con SSH.
-	•	L’uso di Ansible per automatizzare la creazione e gestione dei container.
-	•	La gestione di chiavi SSH per autenticazioni sicure.
+- La configurazione di container Docker con SSH.
+- L’uso di Ansible per automatizzare la creazione e gestione dei container.
+- La gestione di chiavi SSH per autenticazioni sicure.
