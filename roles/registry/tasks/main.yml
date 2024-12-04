@@ -1,0 +1,57 @@
+---
+- name: Verificare se Docker è installato
+  command: which docker
+  register: docker_check
+  ignore_errors: yes
+
+- name: Verificare se Podman è installato
+  command: which podman
+  register: podman_check
+  ignore_errors: yes
+
+- name: Imposta il motore dei container
+  set_fact:
+    container_engine: >
+      {% if docker_check.rc == 0 %} docker
+      {% elif podman_check.rc == 0 %} podman
+      {% else %} none {% endif %}
+
+- name: Normalizza il valore di container_engine
+  set_fact:
+    container_engine: "{{ container_engine | trim }}"
+
+- name: Debug container_engine
+  debug:
+    msg: "Il motore selezionato è: {{ container_engine }}"
+
+- name: Fallire se nessun motore di container è disponibile
+  fail:
+    msg: "Né Docker né Podman sono installati!"
+  when: container_engine == "none"
+
+- name: Avviare un registry locale con Docker
+  docker_container:
+    name: local-registry
+    image: registry:2
+    state: started
+    published_ports:
+      - "5000:5000"
+    restart_policy: always
+    env:
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"  # Permette di eliminare immagini
+      REGISTRY_HTTP_ADDR: "0.0.0.0:5000"
+      REGISTRY_HTTP_HEADERS_Access_Control_Allow_Origin: '"*"'  # CORS abilitato (stringa corretta)
+  when: container_engine == "docker"
+
+- name: Avviare un registry locale con Podman
+  command: >
+    podman run -d --name local-registry
+    -p 5000:5000
+    --restart always
+    -e REGISTRY_STORAGE_DELETE_ENABLED=true
+    -e REGISTRY_HTTP_ADDR=0.0.0.0:5000
+    -e REGISTRY_HTTP_HEADERS_Access_Control_Allow_Origin='*'
+    registry:2
+  args:
+    warn: false
+  when: container_engine == "podman"
