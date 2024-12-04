@@ -26,12 +26,12 @@ Il progetto è organizzato in più ruoli Ansible, ciascuno responsabile di un as
 
 ### Ruoli
 
-#### 1. **registry**
+#### 1. `**registry**`
 Questo ruolo configura un registry locale sulla porta `5000` utilizzando Docker o Podman.  
 - Verifica se `docker` o `podman` è installato.
 - Avvia un container `registry:2` configurato per connessioni non sicure.
 
-#### 2. **build_images**
+#### 2. `build_images`
 Costruisce immagini Docker o Podman personalizzate e le pubblica nel registry locale.  
 - Immagini create:
   - `ubuntu-ssh-container`
