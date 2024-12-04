@@ -66,7 +66,7 @@ Questo ruolo esegue i container utilizzando le immagini presenti nel registry lo
 
 Output atteso:
    ```bash
-   {"repositories":["ubuntu-ssh-container","rockylinux-ssh-container"]}
+   {"repositories":["rockylinux-ssh-container", "ubuntu-ssh-container"]}
    ```
 
 4. Controlla i container in esecuzione:
@@ -99,8 +99,8 @@ Output atteso:
 
 - Container configurati per esporre il servizio SSH.
 - Porte SSH:
-	•	Ubuntu: 22
-	•	Rocky Linux: 2222
+	- Ubuntu: 22
+	- Rocky Linux: 2222
 
 #### Debugging e Risoluzione Problemi
 
