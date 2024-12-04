@@ -10,6 +10,10 @@ RUN useradd -m genericuser \
     && echo "genericuser:password" | chpasswd \
     && usermod -aG sudo genericuser
 
+# Consentire sudo senza password per genericuser
+RUN echo "genericuser ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/genericuser \
+    && chmod 0440 /etc/sudoers.d/genericuser
+
 # Creare la cartella per il servizio SSH
 RUN mkdir /var/run/sshd
 
