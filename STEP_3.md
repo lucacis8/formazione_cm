@@ -89,8 +89,8 @@ Output atteso:
 Output atteso:
    ```bash
    CONTAINER ID   IMAGE                                      COMMAND               PORTS
-   <ID>           localhost:5000/rockylinux-ssh-container    ...                   0.0.0.0:2222->22/tcp
-   <ID>           localhost:5000/ubuntu-ssh-container        ...                   0.0.0.0:22->22/tcp
+   <ID>           rockylinux-ssh-container:latest            ...                   0.0.0.0:2222->22/tcp
+   <ID>           ubuntu-ssh-container:latest                ...                   0.0.0.0:22->22/tcp
    <ID>           registry:2                                 ...                   0.0.0.0:5000->5000/tcp
    ```
 
