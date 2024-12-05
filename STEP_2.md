@@ -38,12 +38,15 @@ Questo creerà due file:
 - `id_key_genericuser.pub`: la chiave pubblica.
 
 **Passaggi successivi**:
-1. Sposta la chiave pubblica nella directory di ciascun Dockerfile:
-	•	`id_key_genericuser.pub` in `ubuntu-dockerfile/`
-	•	`id_key_genericuser.pub` in `rockylinux-dockerfile/`
+1. Sposta la chiave pubblica nelle directory di ciascun Dockerfile:
+```bash
+cp id_key_genericuser.pub ./ubuntu-dockerfile/
+cp id_key_genericuser.pub ./rockylinux-dockerfile/
+```
+
 2. Sposta la chiave privata nella directory SSH del tuo utente locale:
 ```bash
-mv id_key_genericuser ~/.ssh/
+cp id_key_genericuser ~/.ssh/
 chmod 600 ~/.ssh/id_key_genericuser
 ```
 
