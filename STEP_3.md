@@ -54,12 +54,24 @@ Questo ruolo esegue i container utilizzando le immagini presenti nel registry lo
    cd formazione_cm
    ```
 
-2. Eseguire il playbook principale:
+2. Genera le chiavi SSH e spostale nei percorsi corretti:
+   ```bash
+   ssh-keygen -t rsa -b 4096 -C "genericuser@example.com" -f id_key_genericuser
+   ```
+
+   ```bash
+   cp id_key_genericuser.pub ./ubuntu-dockerfile/
+   cp id_key_genericuser.pub ./rockylinux-dockerfile/
+   cp id_key_genericuser ~/.ssh/
+   chmod 600 ~/.ssh/id_key_genericuser
+   ```
+
+3. Eseguire il playbook principale:
    ```bash
    sudo ansible-playbook main-playbook.yml
    ```
 
-3. Verifica il contenuto del registry:
+4. Verifica il contenuto del registry:
    ```bash
    curl http://localhost:5000/v2/_catalog
    ```
@@ -69,7 +81,7 @@ Output atteso:
    {"repositories":["rockylinux-ssh-container", "ubuntu-ssh-container"]}
    ```
 
-4. Controlla i container in esecuzione:
+5. Controlla i container in esecuzione:
    ```bash
    docker ps
    ```
