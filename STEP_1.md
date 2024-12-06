@@ -60,10 +60,10 @@ Dovresti vedere l’immagine `hello-world` nella lista delle immagini disponibil
 
 **3.3 Verifica il Contenitore hello-world**
 
-Controlla che il contenitore `hello-world-container` sia stato avviato correttamente:
+Controlla che il contenitore `hello-world-container` sia presente:
 
 ```bash
-docker ps
+docker ps -a
 ```
 
 Dovresti vedere il contenitore `hello-world-container` in esecuzione.
