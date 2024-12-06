@@ -9,4 +9,5 @@
   roles:
     - role: registry
     - role: build_images
+    - role: push_images
     - role: run_containers
