@@ -47,32 +47,6 @@
     tag: latest
   when: container_engine == "docker"
 
-- name: Taggare immagine Ubuntu per il registry locale con Docker
-  command: docker tag ubuntu-ssh-container:latest localhost:5000/ubuntu-ssh-container:latest
-  when: container_engine == "docker"
-
-- name: Taggare immagine Rocky Linux per il registry locale con Docker
-  command: docker tag rockylinux-ssh-container:latest localhost:5000/rockylinux-ssh-container:latest
-  when: container_engine == "docker"
-
-- name: Push immagine Ubuntu nel registry locale con Docker
-  docker_image:
-    name: "localhost:5000/ubuntu-ssh-container"
-    tag: "latest"
-    push: yes
-    source: "local"
-    state: "present"
-  when: container_engine == "docker"
-
-- name: Push immagine Rocky Linux nel registry locale con Docker
-  docker_image:
-    name: "localhost:5000/rockylinux-ssh-container"
-    tag: "latest"
-    push: yes
-    source: "local"
-    state: "present"
-  when: container_engine == "docker"
-
 - name: Costruire immagine Ubuntu con Podman
   command: >
     podman build --tag ubuntu-ssh-container:latest ./ubuntu-dockerfile
@@ -83,30 +57,6 @@
 - name: Costruire immagine Rocky Linux con Podman
   command: >
     podman build --tag rockylinux-ssh-container:latest ./rockylinux-dockerfile
-  args:
-    warn: false
-  when: container_engine == "podman"
-
-- name: Taggare immagine Ubuntu per il registry locale con Podman
-  command: podman tag ubuntu-ssh-container:latest localhost:5000/ubuntu-ssh-container:latest
-  args:
-    warn: false
-  when: container_engine == "podman"
-
-- name: Taggare immagine Rocky Linux per il registry locale con Podman
-  command: podman tag rockylinux-ssh-container:latest localhost:5000/rockylinux-ssh-container:latest
-  args:
-    warn: false
-  when: container_engine == "podman"
-
-- name: Push immagine Ubuntu nel registry locale con Podman
-  command: podman push localhost:5000/ubuntu-ssh-container:latest
-  args:
-    warn: false
-  when: container_engine == "podman"
-
-- name: Push immagine Rocky Linux nel registry locale con Podman
-  command: podman push localhost:5000/rockylinux-ssh-container:latest
   args:
     warn: false
   when: container_engine == "podman"
