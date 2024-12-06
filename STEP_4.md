@@ -76,17 +76,7 @@ Usa il comando seguente per eseguire il playbook, specificando la password del V
 sudo ansible-playbook main-playbook.yml --ask-vault-pass
 ```
 
-5. Verifica il contenuto del registry, con autenticazione (specificare la propria password)
-```bash
-curl -u genericuser:password http://localhost:5000/v2/_catalog
-```
-
-Output atteso:
-```bash
-{"repositories":["rockylinux-ssh-container", "ubuntu-ssh-container"]}
-```
-
-6. Controlla i container in esecuzione
+5. Controlla i container in esecuzione
 ```bash
 docker ps
 ```
@@ -97,6 +87,33 @@ CONTAINER ID   IMAGE                                      COMMAND               
 <ID>           rockylinux-ssh-container:latest            ...                   0.0.0.0:2222->22/tcp
 <ID>           ubuntu-ssh-container:latest                ...                   0.0.0.0:22->22/tcp
 <ID>           registry:2                                 ...                   0.0.0.0:5000->5000/tcp
+```
+
+6. Controllare l'accesso nei container, sia come root, sia come genericuser (inserire le password specificate nel file `vault.yml`)
+```bash
+ssh root@localhost -p 22
+```
+
+```bash
+ssh genericuser@localhost -p 22
+```
+
+```bash
+ssh root@localhost -p 2222
+```
+
+```bash
+ssh genericuser@localhost -p 2222
+```
+
+7. Verifica il contenuto del registry, con autenticazione (specificare la propria password)
+```bash
+curl -u genericuser:password http://localhost:5000/v2/_catalog
+```
+
+Output atteso:
+```bash
+{"repositories":["rockylinux-ssh-container", "ubuntu-ssh-container"]}
 ```
 
 ---
