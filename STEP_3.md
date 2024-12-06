@@ -35,15 +35,14 @@ Questo ruolo configura un registry locale sulla porta `5000` utilizzando Docker 
 - Avvia un container `registry:2` configurato per connessioni non sicure.
 
 #### 2. `build_images`
-Costruisce immagini Docker o Podman personalizzate.  
-- Immagini create:
-  - `ubuntu-ssh-container`
-  - `rockylinux-ssh-container`
+Costruisce immagini Docker o Podman personalizzate.
+- `ubuntu-ssh-container`
+- `rockylinux-ssh-container`
 
 #### 3. `push_images`
-- Effettua il push delle immagini al registry locale:  
-  - `localhost:5000/ubuntu-ssh-container:latest`
-  - `localhost:5000/rockylinux-ssh-container:latest`
+Effettua il push delle immagini al registry locale:  
+- `localhost:5000/ubuntu-ssh-container:latest`
+- `localhost:5000/rockylinux-ssh-container:latest`
 
 #### 4. `run_containers`
 Questo ruolo esegue i container utilizzando le immagini presenti nel registry locale.  
