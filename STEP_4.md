@@ -61,8 +61,8 @@ ansible-vault create vault.yml
 
 Inserisci le seguenti credenziali nel file, specificando delle password:
 ```bash
-ssh_root_password: "password"
-ssh_genericuser_password: "password"
+SSH_ROOT_PASSWORD: "password"
+SSH_GENERICUSER_PASSWORD: "password"
 docker_registry_user: "genericuser"
 docker_registry_password: "password"
 ```
