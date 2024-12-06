@@ -87,7 +87,7 @@ Output atteso:
 
 5. Controlla i container in esecuzione:
    ```bash
-   docker ps -a
+   docker ps
    ```
 
 Output atteso:
