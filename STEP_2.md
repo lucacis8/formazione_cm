@@ -1,6 +1,6 @@
 # Step 2 - Creare Build di container
 
-Questo esercizio si concentra sulla creazione di due container Docker (uno basato su Ubuntu e l'altro su Rocky Linux) configurati per permettere l'accesso tramite SSH. I container vengono gestiti tramite Ansible utilizzando il playbook `build-containers.yml`.
+Questo esercizio si concentra sulla creazione di due container Docker (uno basato su Ubuntu e l'altro su Rocky Linux) configurati per permettere l'accesso tramite SSH. I container vengono gestiti tramite Ansible utilizzando i playbook `build-ubuntu-container.yml` e `build-rockylinux-container.yml`.
 
 ## Requisiti
 
@@ -21,7 +21,8 @@ cd formazione_cm
 ```
 
 All’interno del repository troverai i seguenti file e cartelle:
-- `build-containers.yml`: il playbook Ansible per costruire ed eseguire i container.
+- `build-ubuntu-container.yml`: il playbook Ansible per costruire ed eseguire il container Ubuntu.
+- `build-rockylinux-container.yml`: il playbook Ansible per costruire ed eseguire il container Rocky Linux.
 - `ubuntu-dockerfile/`: contiene il Dockerfile per il container Ubuntu.
 - `rockylinux-dockerfile/`: contiene il Dockerfile per il container Rocky Linux.
 
@@ -52,17 +53,21 @@ chmod 600 ~/.ssh/id_key_genericuser
 
 ### 3. Costruire ed eseguire i container
 
-Esegui il playbook Ansible per costruire ed eseguire i container:
+Esegui i seguenti playbook Ansible per costruire ed eseguire i container:
 
 ```bash
-sudo ansible-playbook build-containers.yml
+sudo ansible-playbook build-ubuntu-container.yml
 ```
 
-Questo playbook utilizzerà i Dockerfile per creare i container e configurarli per l’accesso SSH.
+```bash
+sudo ansible-playbook build-rockylinux-container.yml
+```
+
+Questi playbook utilizzerano i Dockerfile per creare i container e configurarli per l’accesso SSH.
 
 ### 4. Connettersi ai container tramite SSH
 
-Dopo aver eseguito con successo il playbook, puoi accedere ai container tramite SSH. Utilizza i seguenti comandi per accedere ai container:
+Dopo aver eseguito con successo i playbook, puoi accedere ai container tramite SSH. Utilizza i seguenti comandi per accedere ai container:
 
 Container Ubuntu
 ```bash
