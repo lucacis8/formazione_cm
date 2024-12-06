@@ -38,9 +38,9 @@
       - "5000:5000"
     restart_policy: always
     env:
-      REGISTRY_STORAGE_DELETE_ENABLED: "true"  # Permette di eliminare immagini
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
       REGISTRY_HTTP_ADDR: "0.0.0.0:5000"
-      REGISTRY_HTTP_HEADERS_Access_Control_Allow_Origin: '"*"'  # CORS abilitato (stringa corretta)
+      REGISTRY_HTTP_HEADERS_Access_Control_Allow_Origin: '"*"'
   when: container_engine == "docker"
 
 - name: Avviare un registry locale con Podman
