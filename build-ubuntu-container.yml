@@ -12,14 +12,6 @@
         name: ubuntu-ssh-container
         tag: latest
 
-    - name: Costruire il container Rocky Linux
-      docker_image:
-        source: build
-        build:
-          path: ./rockylinux-dockerfile
-        name: rockylinux-ssh-container
-        tag: latest
-
     - name: Eseguire il container Ubuntu
       docker_container:
         name: ubuntu-ssh-container
@@ -28,16 +20,5 @@
         restart_policy: unless-stopped
         ports:
           - "22:22"  # Esponiamo la porta 22 per SSH dal Mac
-        networks:
-          - name: bridge
-
-    - name: Eseguire il container Rocky Linux
-      docker_container:
-        name: rockylinux-ssh-container
-        image: rockylinux-ssh-container:latest
-        state: started
-        restart_policy: unless-stopped
-        ports:
-          - "2222:22"  # Mappiamo la porta 2222 per Rocky Linux per SSH dal Mac
         networks:
           - name: bridge
