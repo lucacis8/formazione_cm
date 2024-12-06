@@ -34,7 +34,7 @@ Per permettere l’accesso ai container tramite SSH, devi creare una coppia di c
 ssh-keygen -t rsa -b 4096 -C "genericuser@example.com" -f id_key_genericuser
 ```
 
-Inserire una password per una maggiore sicurezza, altrimenti lasciare vuoto.
+Successivamente, è possibile inserire una password per una maggiore sicurezza.
 
 Il comando creerà due file:
 - `id_key_genericuser`: la chiave privata.
