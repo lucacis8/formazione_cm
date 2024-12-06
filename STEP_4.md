@@ -76,9 +76,9 @@ Usa il comando seguente per eseguire il playbook, specificando la password del V
 sudo ansible-playbook main-playbook.yml --ask-vault-pass
 ```
 
-5. Verifica il contenuto del registry
+5. Verifica il contenuto del registry, con autenticazione (specificare la propria password)
 ```bash
-curl http://localhost:5000/v2/_catalog
+curl -u genericuser:password http://localhost:5000/v2/_catalog
 ```
 
 Output atteso:
