@@ -36,10 +36,6 @@
   command: docker login localhost:5000 -u {{ docker_registry_user }} -p {{ docker_registry_password }}
   when: container_engine == "docker"
 
-- name: Login al registry locale con Podman
-  command: podman login localhost:5000 -u {{ docker_registry_user }} -p {{ docker_registry_password }}
-  when: container_engine == "podman"
-
 - name: Eseguire container Ubuntu con Docker
   docker_container:
     name: ubuntu-ssh-container
@@ -59,6 +55,10 @@
     ports:
       - "2222:22"
   when: container_engine == "docker"
+
+- name: Login al registry locale con Podman
+  command: podman login localhost:5000 -u {{ docker_registry_user }} -p {{ docker_registry_password }}
+  when: container_engine == "podman"
 
 - name: Eseguire container Ubuntu con Podman
   command: >
