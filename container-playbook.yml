@@ -19,7 +19,6 @@
         name: hello-world-container
         image: hello-world
         state: started
-        restart_policy: always
 
     - name: Avvia un Docker registry locale
       docker_container:
