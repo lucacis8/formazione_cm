@@ -18,7 +18,10 @@ Il progetto è organizzato in più ruoli Ansible, ciascuno responsabile di un as
 │   │       └── main.yml       # Configura e avvia il registry locale
 │   ├── build_images/
 │   │   └── tasks/
-│   │       └── main.yml       # Costruisce e pusha le immagini Docker
+│   │       └── main.yml       # Costruisce le immagini Docker
+│   ├── push_images/
+│   │   └── tasks/
+│   │       └── main.yml       # Pusha le immagini Docker
 │   ├── run_containers/
 │   │   └── tasks/
 │   │       └── main.yml       # Esegue i container basati sulle immagini
@@ -32,15 +35,17 @@ Questo ruolo configura un registry locale sulla porta `5000` utilizzando Docker 
 - Avvia un container `registry:2` configurato per connessioni non sicure.
 
 #### 2. `build_images`
-Costruisce immagini Docker o Podman personalizzate e le pubblica nel registry locale.  
+Costruisce immagini Docker o Podman personalizzate.  
 - Immagini create:
   - `ubuntu-ssh-container`
   - `rockylinux-ssh-container`
+
+#### 3. `push_images`
 - Effettua il push delle immagini al registry locale:  
   - `localhost:5000/ubuntu-ssh-container:latest`
   - `localhost:5000/rockylinux-ssh-container:latest`
 
-#### 3. `run_containers`
+#### 4. `run_containers`
 Questo ruolo esegue i container utilizzando le immagini presenti nel registry locale.  
 - Controlla se Docker o Podman è installato e configura il motore dei container.
 - Esegue i container:
@@ -83,7 +88,7 @@ Output atteso:
 
 5. Controlla i container in esecuzione:
    ```bash
-   docker ps
+   docker ps -a
    ```
 
 Output atteso:
