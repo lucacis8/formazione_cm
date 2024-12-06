@@ -97,6 +97,14 @@ Per testare il funzionamento del registry locale, puoi provare a caricare un’i
 
 Se il push ha successo, il registry funziona correttamente.
 
+```bash
+curl http://localhost:5000/v2/_catalog
+```
+
+```bash
+{"repositories":[hello-world]}
+```
+
 ## Dettagli del Playbook
 
 Il playbook Ansible esegue i seguenti task:
