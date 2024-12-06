@@ -53,12 +53,13 @@ chmod 600 ~/.ssh/id_key_genericuser
 ```
 
 3. Creare il file Vault con le credenziali
-Crea un file cifrato vault.yml per gestire le password:
+
+Crea un file cifrato `vault.yml` per gestire le password:
 ```bash
 ansible-vault create vault.yml
 ```
 
-Inserisci le seguenti credenziali nel file, specificando delle proprie password:
+Inserisci le seguenti credenziali nel file, specificando delle password:
 ```bash
 ssh_root_password: "password"
 ssh_genericuser_password: "password"
