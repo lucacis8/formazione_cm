@@ -1,0 +1,81 @@
+---
+- name: Caricare variabili cifrate
+  include_vars: "../../../vault.yml"
+
+- name: Verificare se Docker è installato
+  command: which docker
+  register: docker_check
+  ignore_errors: yes
+
+- name: Verificare se Podman è installato
+  command: which podman
+  register: podman_check
+  ignore_errors: yes
+
+- name: Imposta il motore dei container
+  set_fact:
+    container_engine: >
+      {% if docker_check.rc == 0 %} docker
+      {% elif podman_check.rc == 0 %} podman
+      {% else %} none {% endif %}
+
+- name: Normalizza il valore di container_engine
+  set_fact:
+    container_engine: "{{ container_engine | trim }}"
+
+- name: Debug container_engine
+  debug:
+    msg: "Il motore selezionato è: {{ container_engine }}"
+
+- name: Fallire se nessun motore di container è disponibile
+  fail:
+    msg: "Né Docker né Podman sono installati!"
+  when: container_engine == "none"
+
+- name: Login al registry locale con Docker
+  command: docker login localhost:5000 -u {{ docker_registry_user }} -p {{ docker_registry_password }}
+  when: container_engine == "docker"
+
+- name: Login al registry locale con Podman
+  command: podman login localhost:5000 -u {{ docker_registry_user }} -p {{ docker_registry_password }}
+  when: container_engine == "podman"
+
+- name: Eseguire container Ubuntu con Docker
+  docker_container:
+    name: ubuntu-ssh-container
+    image: localhost:5000/ubuntu-ssh-container:latest
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "22:22"
+  when: container_engine == "docker"
+
+- name: Eseguire container Rocky Linux con Docker
+  docker_container:
+    name: rockylinux-ssh-container
+    image: localhost:5000/rockylinux-ssh-container:latest
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "2222:22"
+  when: container_engine == "docker"
+
+- name: Eseguire container Ubuntu con Podman
+  command: >
+    podman run -d --name ubuntu-ssh-container
+    -p 22:22
+    --restart unless-stopped
+    localhost:5000/ubuntu-ssh-container:latest
+  args:
+    warn: false
+  when: container_engine == "podman"
+
+- name: Eseguire container Rocky Linux con Podman
+  command: >
+    podman run -d --name rockylinux-ssh-container
+    -p 2222:22
+    --restart unless-stopped
+    localhost:5000/rockylinux-ssh-container:latest
+  args:
+    warn: false
+  when: container_engine == "podman"
