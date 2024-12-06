@@ -1,0 +1,93 @@
+---
+- name: Caricare variabili cifrate
+  include_vars: "../../../vault.yml"
+
+- name: Verificare se Docker è installato
+  command: which docker
+  register: docker_check
+  ignore_errors: yes
+
+- name: Verificare se Podman è installato
+  command: which podman
+  register: podman_check
+  ignore_errors: yes
+
+- name: Imposta il motore dei container
+  set_fact:
+    container_engine: >
+      {% if docker_check.rc == 0 %} docker
+      {% elif podman_check.rc == 0 %} podman
+      {% else %} none {% endif %}
+
+- name: Normalizza il valore di container_engine
+  set_fact:
+    container_engine: "{{ container_engine | trim }}"
+
+- name: Debug container_engine
+  debug:
+    msg: "Il motore selezionato è: {{ container_engine }}"
+
+- name: Fallire se nessun motore di container è disponibile
+  fail:
+    msg: "Né Docker né Podman sono installati!"
+  when: container_engine == "none"
+
+# Login al registry locale con Docker
+- name: Login al registry locale con Docker
+  command: >
+    echo "{{ docker_registry_password }}" | docker login localhost:5000 -u {{ docker_registry_user }} --password-stdin
+  when: container_engine == "docker"
+
+- name: Verifica login al registry Docker
+  command: echo "{{ docker_registry_password }}" | docker login localhost:5000 -u {{ docker_registry_user }} --password-stdin
+  when: container_engine == "docker"
+  register: docker_login
+  failed_when: docker_login.rc != 0
+  ignore_errors: no
+
+- name: Debug login Docker
+  debug:
+    msg: "Output del login Docker: {{ docker_login.stdout }}"
+  when: docker_login.rc != 0
+
+# Costruire immagine Ubuntu con Docker
+- name: Costruire immagine Ubuntu con Docker
+  docker_image:
+    source: build
+    build:
+      path: "./ubuntu-dockerfile"
+      args:
+        SSH_ROOT_PASSWORD: "{{ ssh_root_password }}"
+        SSH_GENERICUSER_PASSWORD: "{{ ssh_genericuser_password }}"
+    name: ubuntu-ssh-container
+    tag: latest
+  when: container_engine == "docker"
+
+# Costruire immagine Rocky Linux con Docker
+- name: Costruire immagine Rocky Linux con Docker
+  docker_image:
+    source: build
+    build:
+      path: "./rockylinux-dockerfile"
+      args:
+        SSH_ROOT_PASSWORD: "{{ ssh_root_password }}"
+        SSH_GENERICUSER_PASSWORD: "{{ ssh_genericuser_password }}"
+    name: rockylinux-ssh-container
+    tag: latest
+  when: container_engine == "docker"
+
+# Costruire immagine Ubuntu con Podman
+- name: Costruire immagine Ubuntu con Podman
+  command: >
+    podman build --tag ubuntu-ssh-container:latest ./ubuntu-dockerfile
+  args:
+    warn: false
+  when: container_engine == "podman"
+
+# Costruire immagine Rocky Linux con Podman
+- name: Costruire immagine Rocky Linux con Podman
+  command: >
+    podman build --tag rockylinux-ssh-container:latest ./rockylinux-dockerfile
+  args:
+    warn: false
+  when: container_engine == "podman"
