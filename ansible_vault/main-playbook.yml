@@ -1,0 +1,16 @@
+---
+- name: Esecuzione del setup completo
+  hosts: localhost
+  become: yes
+  vars_files:
+    - vault.yml
+
+  vars:
+    ubuntu_dockerfile_path: ./ubuntu-dockerfile
+    rockylinux_dockerfile_path: ./rockylinux-dockerfile
+
+  roles:
+    - role: registry
+    - role: build_images
+    - role: push_images
+    - role: run_containers
