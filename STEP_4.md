@@ -70,6 +70,7 @@ docker_registry_password: "password"
 Salva e chiudi l’editor. Assicurati di ricordare la password che hai scelto per il Vault.
 
 4. Eseguire il playbook principale
+
 Usa il comando seguente per eseguire il playbook, specificando la password del Vault:
 ```bash
 sudo ansible-playbook main-playbook.yml --ask-vault-pass
