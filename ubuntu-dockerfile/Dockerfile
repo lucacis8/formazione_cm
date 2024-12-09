@@ -1,14 +1,15 @@
 # Usare l'immagine ufficiale di Ubuntu come base
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 # Installare OpenSSH, sudo e bash
-RUN apt-get update && apt-get install -y openssh-server sudo bash \
+RUN apt-get update && apt-get install -y openssh-server sudo bash docker.io \
     && rm -rf /var/lib/apt/lists/*
 
 # Creare un utente generico
 RUN useradd -m genericuser \
     && echo "genericuser:password" | chpasswd \
-    && usermod -aG sudo genericuser
+    && usermod -aG sudo genericuser \
+    && usermod -aG docker genericuser
 
 # Consentire sudo senza password per genericuser
 RUN echo "genericuser ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/genericuser \
