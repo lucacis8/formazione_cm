@@ -21,9 +21,13 @@ La struttura del progetto è la stessa dello **Step 3**, ma include un file Vaul
 │   ├── push_images/
 │   │   └── tasks/
 │   │       └── main.yml       # Pusha le immagini Docker
-│   ├── run_containers/
-│   │   └── tasks/
-│   │       └── main.yml       # Esegue i container basati sulle immagini
+│   └── run_containers/
+│       └── tasks/
+│           └── main.yml       # Esegue i container basati sulle immagini
+├── ubuntu-dockerfile/
+│   └── Dockerfile
+├── rockylinux-dockerfile/
+│   └── Dockerfile
 ```
 
 ### Ruoli
