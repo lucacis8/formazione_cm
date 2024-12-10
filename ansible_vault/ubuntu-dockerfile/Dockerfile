@@ -1,5 +1,5 @@
 # Usare l'immagine ufficiale di Ubuntu come base
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 # Usare argomenti per le password
 ARG SSH_ROOT_PASSWORD
