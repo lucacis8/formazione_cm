@@ -19,6 +19,6 @@
         state: started
         restart_policy: unless-stopped
         ports:
-          - "2222:22"  # Mappiamo la porta 2222 per Rocky Linux per SSH dal Mac
+          - "2222:22"
         networks:
           - name: bridge
