@@ -22,9 +22,13 @@ Il progetto è organizzato in più ruoli Ansible, ciascuno responsabile di un as
 │   ├── push_images/
 │   │   └── tasks/
 │   │       └── main.yml       # Pusha le immagini Docker
-│   ├── run_containers/
-│   │   └── tasks/
-│   │       └── main.yml       # Esegue i container basati sulle immagini
+│   └── run_containers/
+│       └── tasks/
+│           └── main.yml       # Esegue i container basati sulle immagini
+├── ubuntu-dockerfile/
+│   └── Dockerfile
+├── rockylinux-dockerfile/
+│   └── Dockerfile
 ```
 
 ### Ruoli
