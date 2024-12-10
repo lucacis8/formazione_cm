@@ -22,3 +22,5 @@
           - "2222:22"
         networks:
           - name: bridge
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
