@@ -9,9 +9,12 @@ ARG SSH_GENERICUSER_PASSWORD
 ENV SSH_ROOT_PASSWORD=${SSH_ROOT_PASSWORD}
 ENV SSH_GENERICUSER_PASSWORD=${SSH_GENERICUSER_PASSWORD}
 
-# Installare OpenSSH, sudo e bash
-RUN dnf -y install openssh-server sudo bash && \
-    rm -rf /var/cache/dnf
+# Installare OpenSSH, sudo e configurare il repository di Docker
+RUN dnf -y install openssh-server sudo bash \
+    && dnf -y install dnf-plugins-core \
+    && dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo \
+    && dnf -y install docker-ce docker-ce-cli containerd.io \
+    && rm -rf /var/cache/dnf
 
 # Configurare SSH per consentire l'accesso con password e login come root
 RUN echo "PermitRootLogin yes" >> /etc/ssh/sshd_config && \
