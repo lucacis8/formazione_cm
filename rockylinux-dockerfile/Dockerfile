@@ -1,8 +1,11 @@
 # Usare l'immagine ufficiale di Rocky Linux come base
 FROM rockylinux:9
 
-# Installare OpenSSH, sudo e bash
-RUN dnf -y install openssh-server sudo bash docker.io \
+# Installare OpenSSH, sudo e configurare il repository di Docker
+RUN dnf -y install openssh-server sudo bash \
+    && dnf -y install dnf-plugins-core \
+    && dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo \
+    && dnf -y install docker-ce docker-ce-cli containerd.io \
     && rm -rf /var/cache/dnf
 
 # Creare un utente generico
