@@ -10,7 +10,7 @@ ENV SSH_ROOT_PASSWORD=${SSH_ROOT_PASSWORD}
 ENV SSH_GENERICUSER_PASSWORD=${SSH_GENERICUSER_PASSWORD}
 
 # Installare OpenSSH, sudo e bash
-RUN apt-get update && apt-get install -y openssh-server sudo bash \
+RUN apt-get update && apt-get install -y openssh-server sudo bash docker.io \
     && rm -rf /var/lib/apt/lists/*
 
 # Configurare SSH per consentire l'accesso con password e login come root
