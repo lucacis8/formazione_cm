@@ -2,7 +2,7 @@
 FROM rockylinux:9
 
 # Installare OpenSSH, sudo e bash
-RUN dnf -y install openssh-server sudo bash \
+RUN dnf -y install openssh-server sudo bash docker.io \
     && rm -rf /var/cache/dnf
 
 # Creare un utente generico
