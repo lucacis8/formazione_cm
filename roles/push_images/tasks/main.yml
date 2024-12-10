@@ -1,7 +1,4 @@
 ---
-- name: Caricare variabili cifrate
-  include_vars: "../../../vault.yml"
-
 - name: Verificare se Docker è installato
   command: which docker
   register: docker_check
@@ -32,23 +29,6 @@
     msg: "Né Docker né Podman sono installati!"
   when: container_engine == "none"
 
-- name: Login al registry locale con Docker
-  command: >
-    echo "{{ docker_registry_password }}" | docker login localhost:5000 -u {{ docker_registry_user }} --password-stdin
-  when: container_engine == "docker"
-
-- name: Verifica login al registry Docker
-  command: echo "{{ docker_registry_password }}" | docker login localhost:5000 -u {{ docker_registry_user }} --password-stdin
-  when: container_engine == "docker"
-  register: docker_login
-  failed_when: docker_login.rc != 0
-  ignore_errors: no
-
-- name: Debug login Docker
-  debug:
-    msg: "Output del login Docker: {{ docker_login.stdout }}"
-  when: docker_login.rc != 0
-
 # Taggare immagine Ubuntu per il registry locale con Docker
 - name: Taggare immagine Ubuntu per il registry locale con Docker
   command: docker tag ubuntu-ssh-container:latest localhost:5000/ubuntu-ssh-container:latest
@@ -58,23 +38,6 @@
 - name: Taggare immagine Rocky Linux per il registry locale con Docker
   command: docker tag rockylinux-ssh-container:latest localhost:5000/rockylinux-ssh-container:latest
   when: container_engine == "docker"
-
-- name: Login al registry locale con Docker
-  command: >
-    echo "{{ docker_registry_password }}" | docker login localhost:5000 -u {{ docker_registry_user }} --password-stdin
-  when: container_engine == "docker"
-
-- name: Verifica login al registry Docker
-  command: echo "{{ docker_registry_password }}" | docker login localhost:5000 -u {{ docker_registry_user }} --password-stdin
-  when: container_engine == "docker"
-  register: docker_login
-  failed_when: docker_login.rc != 0
-  ignore_errors: no
-
-- name: Debug login Docker
-  debug:
-    msg: "Output del login Docker: {{ docker_login.stdout }}"
-  when: docker_login.rc != 0
 
 # Push immagine Ubuntu nel registry locale con Docker
 - name: Push immagine Ubuntu nel registry locale con Docker
