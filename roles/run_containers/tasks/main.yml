@@ -37,6 +37,10 @@
     restart_policy: unless-stopped
     ports:
       - "22:22"
+    networks:
+      - name: bridge
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   when: container_engine == "docker"
 
 - name: Eseguire container Rocky Linux con Docker
@@ -47,6 +51,10 @@
     restart_policy: unless-stopped
     ports:
       - "2222:22"
+    networks:
+      - name: bridge
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   when: container_engine == "docker"
 
 - name: Eseguire container Ubuntu con Podman
