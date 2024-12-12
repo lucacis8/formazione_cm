@@ -90,16 +90,6 @@ Riavvia il container Jenkins:
    docker restart jenkins-container
    ```
 
-### Configurazione delle Credenziali GitHub
-
-Per consentire a Jenkins di accedere al repository GitHub, segui questi passaggi:
-- Vai su Gestisci Jenkins > Credenziali > (globali) > Add Credentials.
-- Seleziona il tipo Nome utente e password.
-- Inserisci come:
-	- Nome utente: Il tuo nome utente GitHub.
-	- Password: La tua password.
-	- ID: github_creds.
-
 ---
 
 ## Parte 3: Configurazione della Pipeline Jenkins
@@ -116,8 +106,7 @@ Segui questi passaggi per configurare una semplice pipeline:
 - Nella sezione Pipeline, seleziona “Pipeline script from SCM”.
 - Configura:
 	- SCM: Git.
-	- Repository URL: Il link al tuo repository GitHub.
-	- Credenziali: Seleziona le credenziali github_creds.
+	- Repository URL: Il link al repository GitHub (mettere nel caso https://github.com/lucacis8/formazione_cm).
  	- Ramo: */main
  - Assicurati che il Jenkinsfile sia posizionato nella root del repository, insieme ai vari file mostrati all'inizio.
 
