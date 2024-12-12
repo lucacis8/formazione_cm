@@ -1,120 +1,134 @@
 # Step 5 - Jenkins & Ansible
 
 ## Obiettivo
+Questo progetto utilizza Jenkins per automatizzare il ciclo di vita delle immagini Docker, dal build al push su un registro locale. Le operazioni principali includono:
+1. Configurazione di un container con Docker attivo.
+2. Configurazione di una pipeline Jenkins che:
+   - Esegue la build di un’immagine Docker.
+   - Tagga l’immagine in modo progressivo.
+   - Esegue il push dell’immagine in un registry Docker locale.
 
-In questo progetto, la pipeline Jenkins automatizza la costruzione, il tagging e il push di immagini Docker. La pipeline esegue le seguenti operazioni:
-1. Costruzione di un'immagine Docker a partire da un `Dockerfile` presente nel repository.
-2. Tagging progressivo dell'immagine costruita.
-3. Push dell'immagine nel registry Docker locale (su `localhost:5000`).
+---
 
-### Configurazione del Container con Docker Attivo
+## Parte 1: Configurazione del Container con Docker Attivo
+Per configurare un container con Docker attivo, **basta seguire le istruzioni presenti nel file `STEP_3.md`**. Questo file guida alla configurazione completa del container con Docker e Podman attivi, inclusa la creazione di un registro locale e la gestione delle immagini Docker.
 
-La prima parte della consegna riguarda la configurazione di un container che deve avere attivo il servizio Docker o Podman. Per questa parte, puoi seguire `STEP_3.md`, che ti guida alla configurazione di un registry Docker locale, alla creazione di immagini Docker personalizzate e al push di queste immagini nel registry.
+### Verifica del Docker Attivo nel Container
+Dopo aver configurato il container seguendo il file `STEP_3.md`, è possibile verificare che Docker sia attivo all’interno del container eseguendo:
 
-Una volta configurato il container, puoi accedere al container Ubuntu (o anche a quello basato su Rocky Linux) per verificare che Docker stia funzionando correttamente. Puoi farlo con i seguenti passaggi:
-1. Accedi al container tramite `docker exec`:
+1. Accedi al container tramite:
    ```bash
-   docker exec -it jenkins-container bash
+   docker exec -it <nome-del-container> bash
    ```
 
-2. All’interno del container, verifica che Docker sia attivo e che i container vengano mostrati correttamente:
+2. All’interno del container, esegui:
    ```bash
    sudo docker ps
    ```
 
-Questo comando mostrerà gli stessi container in esecuzione sul tuo sistema Mac, perché il Docker socket è condiviso tra l’host e il container (non è Docker in Docker).
+Questo comando mostrerà gli stessi container in esecuzione sull’host Mac, poiché il Docker socket (`/var/run/docker.sock`) è condiviso tra l’host e il container. **Non è Docker in Docker**, ma una condivisione diretta del socket Docker.
 
-## Struttura del Progetto
+---
 
-Il progetto contiene un file Jenkinsfile per la configurazione della pipeline Jenkins e la struttura Docker necessaria per costruire e spingere le immagini.
-```bash
-.
-├── Dockerfile                 # Dockerfile per costruzione immagine
-├── Jenkinsfile                # Configurazione della pipeline Jenkins
-└── README.md                  # Questo file
-```
+## Parte 2: Configurazione di Jenkins
 
-### Pipeline Jenkins
+### Creazione del Container Jenkins
 
-La pipeline è strutturata in più fasi principali:
-1. **Checkout del codice**: Recupera il codice dal repository GitHub.
-2. **Build dell’immagine Docker**: Crea l’immagine Docker basata sul `Dockerfile` e la tagga progressivamente con un timestamp.
-3. **Push nel registry Docker**: Esegue il push dell’immagine costruita nel registro Docker locale sulla porta `5000`.
+Dopo aver seguito lo Step 3 e aver quindi creato il registro, procediamo configurando Jenkins. Crea un container Docker specifico che abbia accesso al Docker socket e ai volumi necessari. Esegui i seguenti comandi:
 
-## Come Funziona
-
-### Configurazione del Container Jenkins
-
-Il container Jenkins è già configurato con Docker e Ansible, quindi è necessario solo eseguire il passo di configurazione della pipeline (come descritto nel passo 2).
-
-### Creazione della Pipeline Jenkins
-
-1. **Clonare il Repository**:
-Clona il repository GitHub dove è presente il file `Jenkinsfile`:
-   ```bash
-   git clone https://github.com/lucacis8/formazione_cm
-   cd formazione_cm
+1. **Creazione del Container**:
+   ```
+   docker run -d \
+       --name jenkins-container \
+       -p 8080:8080 -p 50000:50000 \
+       -v /var/run/docker.sock:/var/run/docker.sock \
+       -v jenkins_home:/var/jenkins_home \
+       jenkins/jenkins:lts
    ```
 
-2. **Configurazione di Jenkins**:
-Assicurati di avere i plugin `docker-plugin` e `ansible-plugin` installati su Jenkins per abilitare le fasi di costruzione delle immagini e configurare il registry Docker locale.
+- Il Docker socket (`/var/run/docker.sock`) è montato per consentire a Jenkins di eseguire comandi Docker.
+- La directory `jenkins_home` viene utilizzata per mantenere i dati persistenti di Jenkins.
 
-### Creazione del Jenkinsfile
+2. **Accedi all’Interfaccia di Jenkins**:
+Apri un browser e vai su `http://localhost:8080`. Durante il primo avvio, Jenkins richiederà una chiave di sblocco. Recupera la chiave dal container con:
+   ```bash
+   docker exec jenkins-container cat /var/jenkins_home/secrets/initialAdminPassword
+   ```
 
-Il file `Jenkinsfile` definisce la pipeline. La pipeline include:
-- **Checkout del codice**: Il repository Git viene scaricato da GitHub.
-- **Build dell’immagine Docker**: L’immagine viene costruita con il comando `docker build` e viene taggata utilizzando un timestamp.
-- **Push nel registry**: L’immagine viene pushata nel registry Docker locale in esecuzione sulla porta `5000`.
+Procedi con la configurazione guidata.
 
-Ecco un esempio di configurazione di base del `Jenkinsfile`:
-```bash
-pipeline {
-    agent any
+3. **Installazione di Docker nel Container Jenkins**:
+Completata la configurazione iniziale, accedi al container Jenkins come utente `root`:
+   ```bash
+   docker exec --user root -it jenkins-container bash
+   ```
 
-    environment {
-        DOCKER_IMAGE_NAME = 'my-app'
-        DOCKER_REGISTRY = 'localhost:5000'
-    }
+Installa Docker:
+   ```bash
+   apt update && apt install docker.io
+   ```
 
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
+Modifica i permessi del socket Docker:
+   ```bash
+   chown root:docker /var/run/docker.sock  
+   chmod 660 /var/run/docker.sock  
+   ```
 
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    def timestamp = new Date().format('yyyyMMddHHmmss')
-                    sh "docker build -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${timestamp} ."
-                }
-            }
-        }
+Aggiungi l'utente `jenkins` al gruppo `docker`:
+   ```bash
+   usermod -aG docker jenkins
+   ```
 
-        stage('Push to Registry') {
-            steps {
-                script {
-                    def timestamp = new Date().format('yyyyMMddHHmmss')
-                    sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${timestamp}"
-                }
-            }
-        }
-    }
-}
-```
+Riavvia il container Jenkins:
+   ```bash
+   docker restart jenkins-container
+   ```
 
-### Verifica dell’Immagine
+Configurazione delle Credenziali GitHub
 
-Una volta che la pipeline è eseguita con successo, verifica che l’immagine sia stata costruita e pushata correttamente:
-1. **Verifica l’Elenco delle Immagini Docker**:
-Controlla se l’immagine è stata creata localmente con il comando:
+Per consentire a Jenkins di accedere al repository GitHub, segui questi passaggi:
+	1.	Generazione del Token di Accesso su GitHub:
+	•	Vai su GitHub > Settings > Developer Settings > Personal Access Tokens > Tokens (classic).
+	•	Crea un nuovo token con i permessi per i repository (repo).
+	2.	Aggiunta delle Credenziali in Jenkins:
+	•	Vai su Manage Jenkins > Manage Credentials > (Global) > Add Credentials.
+	•	Seleziona il tipo Username with password.
+	•	Inserisci come:
+	•	Username: Il tuo nome utente GitHub.
+	•	Password: Il token generato.
+	•	Dai un ID riconoscibile (es. github_creds).
+
+---
+
+## Parte 3: Configurazione della Pipeline Jenkins
+
+Segui questi passaggi per configurare una semplice pipeline:
+1.	Creazione del Progetto Pipeline:
+	•	Vai su Jenkins > New Item > Pipeline.
+	•	Dai un nome alla pipeline e seleziona il tipo “Pipeline”.
+2.	Definizione della Pipeline:
+	•	Nella sezione Pipeline, seleziona “Pipeline script from SCM”.
+	•	Configura:
+	•	SCM: Git.
+	•	Repository URL: Il link al tuo repository GitHub.
+	•	Credentials: Seleziona le credenziali github_creds.
+	•	Assicurati che il file Jenkinsfile sia posizionato nella root del repository.
+
+3. **Esegui la Pipeline**:
+Salva e avvia la pipeline. Controlla che tutte le fasi vengano completate con successo.
+
+---
+
+## Parte 4: Verifica delle operazioni
+
+1.	**Verifica l’immagine costruita**:
+Dopo l’esecuzione della pipeline, verifica che l’immagine sia stata costruita:
    ```bash
    docker images
    ```
 
-2. **Verifica il Registro Docker Locale**:
-Per verificare se l’immagine è stata pushata nel registry Docker locale, esegui:
+2. **Controlla il Registro Docker**:
+Assicurati che l’immagine sia stata pushata nel registry:
    ```bash
    curl http://localhost:5000/v2/_catalog
    ```
@@ -124,26 +138,18 @@ Output atteso:
    {"repositories":["my-app"]}
    ```
 
-### Esegui il Container
-
-Per eseguire il container basato sull’immagine appena creata, utilizza il comando Docker `run`:
+3. **Esegui il Container**:
+Puoi avviare un container basato sull’immagine:
    ```bash
    docker run -d localhost:5000/my-app:<timestamp>
    ```
 
-Puoi anche controllare i log del container con il comando:
-   ```bash
-   docker logs <container_id>
-   ```
+4. **Debugging**:
+- **Permission Denied sul Docker Socket**: Verifica i permessi del Docker socket montato nel container Jenkins.
+- **Immagini non disponibili**: Controlla che la fase di push della pipeline non abbia errori.
 
-### Debugging e Risoluzione Problemi
+---
 
-Se riscontri problemi durante l’esecuzione della pipeline o dei container, considera i seguenti punti:
-- **Connessione al Docker Socket**: Assicurati che il Docker socket (`/var/run/docker.sock`) sia correttamente montato e accessibile dal container Jenkins.
-- **Permission Denied su Docker**: Se ottieni errori di permessi, controlla che l’utente Jenkins abbia i permessi per accedere al Docker socket.
-- **Immagini Non Trovate nel Registro**: Verifica che il processo di build e push sia stato completato senza errori.
-- **Container Non Avviati**: Controlla i log dei container per eventuali errori di avvio.
+## Conclusione
 
-## Conclusioni
-
-Questa configurazione automatizza il flusso di lavoro di costruzione e distribuzione delle immagini Docker tramite Jenkins. Con la pipeline configurata correttamente, ogni push nel repository GitHub avvierà automaticamente la costruzione e il push di nuove immagini nel registry Docker locale.
+Seguendo questa guida, hai configurato un ambiente Jenkins completo per automatizzare la build, il tagging e il push delle immagini Docker. Il progetto sfrutta il socket Docker condiviso per eseguire comandi Docker direttamente dal container Jenkins.
