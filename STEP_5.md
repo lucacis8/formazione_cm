@@ -1,12 +1,14 @@
 # Step 5 - Jenkins & Ansible
 
 ## Obiettivo
+
 In questo progetto, la pipeline Jenkins automatizza la costruzione, il tagging e il push di immagini Docker. La pipeline esegue le seguenti operazioni:
 1. Costruzione di un'immagine Docker a partire da un `Dockerfile` presente nel repository.
 2. Tagging progressivo dell'immagine costruita.
 3. Push dell'immagine nel registry Docker locale (su `localhost:5000`).
 
 ### Configurazione del Container con Docker Attivo
+
 La prima parte della consegna riguarda la configurazione di un container che deve avere attivo il servizio Docker o Podman. Per questa parte, puoi seguire `STEP_3.md`, che ti guida alla configurazione di un registry Docker locale, alla creazione di immagini Docker personalizzate e al push di queste immagini nel registry.
 
 Una volta configurato il container, puoi accedere al container Ubuntu (o anche a quello basato su Rocky Linux) per verificare che Docker stia funzionando correttamente. Puoi farlo con i seguenti passaggi:
@@ -17,7 +19,7 @@ Una volta configurato il container, puoi accedere al container Ubuntu (o anche a
 
 2. All’interno del container, verifica che Docker sia attivo e che i container vengano mostrati correttamente:
    ```bash
-   docker ps
+   sudo docker ps
    ```
 
 Questo comando mostrerà gli stessi container in esecuzione sul tuo sistema Mac, perché il Docker socket è condiviso tra l’host e il container (non è Docker in Docker).
