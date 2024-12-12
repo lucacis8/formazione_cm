@@ -84,8 +84,9 @@ Aggiungi l'utente `jenkins` al gruppo `docker`:
    usermod -aG docker jenkins
    ```
 
-Riavvia il container Jenkins:
+Esci e riavvia il container Jenkins:
    ```bash
+   exit
    docker restart jenkins-container
    ```
 
