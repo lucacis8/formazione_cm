@@ -79,14 +79,14 @@ Modifica i permessi del socket Docker:
    chmod 660 /var/run/docker.sock  
    ```
 
-Aggiungi l'utente `jenkins` al gruppo `docker`:
+Aggiungi l'utente `jenkins` al gruppo `docker` ed esci:
    ```bash
    usermod -aG docker jenkins
+   exit
    ```
 
-Esci e riavvia il container Jenkins:
+Riavvia il container Jenkins:
    ```bash
-   exit
    docker restart jenkins-container
    ```
 
