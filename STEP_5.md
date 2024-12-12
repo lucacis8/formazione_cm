@@ -106,7 +106,7 @@ Segui questi passaggi per configurare una semplice pipeline:
 - Nella sezione Pipeline, seleziona “Pipeline script from SCM”.
 - Configura:
 	- SCM: Git.
-	- Repository URL: Il link al repository GitHub (mettere nel caso https://github.com/lucacis8/formazione_cm).
+	- Repository URL: Il link al repository GitHub (mettere https://github.com/lucacis8/formazione_cm).
  	- Ramo: */main
  - Assicurati che il Jenkinsfile sia posizionato nella root del repository.
 
