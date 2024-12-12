@@ -1,6 +1,7 @@
 # Step 5 - Jenkins & Ansible
 
 ## Obiettivo
+
 Questo progetto utilizza Jenkins per automatizzare il ciclo di vita delle immagini Docker, dal build al push su un registro locale. Le operazioni principali includono:
 1. Configurazione di un container con Docker attivo.
 2. Configurazione di una pipeline Jenkins che:
@@ -11,19 +12,21 @@ Questo progetto utilizza Jenkins per automatizzare il ciclo di vita delle immagi
 ---
 
 ## Parte 1: Configurazione del Container con Docker Attivo
-Per configurare un container con Docker attivo, **basta seguire le istruzioni presenti nel file `STEP_3.md`**. Questo file guida alla configurazione completa del container con Docker e Podman attivi, inclusa la creazione di un registro locale e la gestione delle immagini Docker.
+
+Per configurare un container con Docker attivo, **basta seguire le istruzioni presenti nel file `STEP_3.md`**. Questo file guida alla configurazione completa di due container con Docker attivo, inclusa la creazione di un registro locale e la gestione delle immagini Docker.
 
 ### Verifica del Docker Attivo nel Container
-Dopo aver configurato il container seguendo il file `STEP_3.md`, è possibile verificare che Docker sia attivo all’interno del container eseguendo:
+
+Dopo aver seguito il file `STEP_3.md`, è possibile verificare che Docker sia attivo all’interno del container:
 
 1. Accedi al container tramite:
    ```bash
-   docker exec -it <nome-del-container> bash
+   docker exec --user root -it <nome-del-container> bash
    ```
 
 2. All’interno del container, esegui:
    ```bash
-   sudo docker ps
+   docker ps
    ```
 
 Questo comando mostrerà gli stessi container in esecuzione sull’host Mac, poiché il Docker socket (`/var/run/docker.sock`) è condiviso tra l’host e il container. **Non è Docker in Docker**, ma una condivisione diretta del socket Docker.
@@ -34,10 +37,10 @@ Questo comando mostrerà gli stessi container in esecuzione sull’host Mac, poi
 
 ### Creazione del Container Jenkins
 
-Dopo aver seguito lo Step 3 e aver quindi creato il registro, procediamo configurando Jenkins. Crea un container Docker specifico che abbia accesso al Docker socket e ai volumi necessari. Esegui i seguenti comandi:
+Dopo aver seguito lo Step 3, e aver quindi creato il registro, procediamo configurando Jenkins. Crea un container Docker specifico che abbia accesso al Docker socket e ai volumi necessari. Esegui i seguenti comandi:
 
 1. **Creazione del Container**:
-   ```
+   ```bash
    docker run -d \
        --name jenkins-container \
        -p 8080:8080 -p 50000:50000 \
@@ -101,11 +104,14 @@ Per consentire a Jenkins di accedere al repository GitHub, segui questi passaggi
 ## Parte 3: Configurazione della Pipeline Jenkins
 
 Segui questi passaggi per configurare una semplice pipeline:
+
 1. **Creazione del Progetto Pipeline**:
+
 - Vai su Jenkins > Nuovo Elemento.
 - Dai un nome alla pipeline e seleziona il tipo “Pipeline”.
 
 2. **Definizione della Pipeline**:
+
 - Nella sezione Pipeline, seleziona “Pipeline script from SCM”.
 - Configura:
 	- SCM: Git.
@@ -115,6 +121,7 @@ Segui questi passaggi per configurare una semplice pipeline:
  - Assicurati che il Jenkinsfile sia posizionato nella root del repository, insieme ai vari file mostrati all'inizio.
 
 3. **Esegui la Pipeline**:
+
 Salva e avvia la pipeline. Controlla che tutte le fasi vengano completate con successo.
 
 ---
@@ -122,12 +129,14 @@ Salva e avvia la pipeline. Controlla che tutte le fasi vengano completate con su
 ## Parte 4: Verifica delle operazioni
 
 1. **Verifica l’immagine costruita**:
+
 Dopo l’esecuzione della pipeline, verifica che l’immagine sia stata costruita:
    ```bash
    docker images
    ```
 
 3. **Controlla il Registro Docker**:
+
 Assicurati che l’immagine sia stata pushata nel registry:
    ```bash
    curl http://localhost:5000/v2/_catalog
@@ -139,12 +148,14 @@ Output atteso:
    ```
 
 3. **Esegui il Container**:
+
 Puoi avviare un container basato sull’immagine:
    ```bash
    docker run -d localhost:5000/my-app:<timestamp>
    ```
 
-4. **Debugging**:
+5. **Debugging**:
+
 - **Permission Denied sul Docker Socket**: Verifica i permessi del Docker socket montato nel container Jenkins.
 - **Immagini non disponibili**: Controlla che la fase di push della pipeline non abbia errori.
 
