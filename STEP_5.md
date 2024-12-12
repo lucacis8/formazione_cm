@@ -50,6 +50,7 @@ Dopo aver seguito lo Step 3 e aver quindi creato il registro, procediamo configu
 - La directory `jenkins_home` viene utilizzata per mantenere i dati persistenti di Jenkins.
 
 2. **Accedi all’Interfaccia di Jenkins**:
+
 Apri un browser e vai su `http://localhost:8080`. Durante il primo avvio, Jenkins richiederà una chiave di sblocco. Recupera la chiave dal container con:
    ```bash
    docker exec jenkins-container cat /var/jenkins_home/secrets/initialAdminPassword
@@ -58,6 +59,7 @@ Apri un browser e vai su `http://localhost:8080`. Durante il primo avvio, Jenkin
 Procedi con la configurazione guidata.
 
 3. **Installazione di Docker nel Container Jenkins**:
+
 Completata la configurazione iniziale, accedi al container Jenkins come utente `root`:
    ```bash
    docker exec --user root -it jenkins-container bash
@@ -84,35 +86,32 @@ Riavvia il container Jenkins:
    docker restart jenkins-container
    ```
 
-Configurazione delle Credenziali GitHub
+### Configurazione delle Credenziali GitHub
 
 Per consentire a Jenkins di accedere al repository GitHub, segui questi passaggi:
-	1.	Generazione del Token di Accesso su GitHub:
-	•	Vai su GitHub > Settings > Developer Settings > Personal Access Tokens > Tokens (classic).
-	•	Crea un nuovo token con i permessi per i repository (repo).
-	2.	Aggiunta delle Credenziali in Jenkins:
-	•	Vai su Manage Jenkins > Manage Credentials > (Global) > Add Credentials.
-	•	Seleziona il tipo Username with password.
-	•	Inserisci come:
-	•	Username: Il tuo nome utente GitHub.
-	•	Password: Il token generato.
-	•	Dai un ID riconoscibile (es. github_creds).
+- Vai su Gestisci Jenkins > Credenziali > (globali) > Add Credentials.
+- Seleziona il tipo Nome utente e password.
+- Inserisci come:
+	- Nome utente: Il tuo nome utente GitHub.
+	- Password: La tua password.
+	- ID: github_creds.
 
 ---
 
 ## Parte 3: Configurazione della Pipeline Jenkins
 
 Segui questi passaggi per configurare una semplice pipeline:
-1.	Creazione del Progetto Pipeline:
-	•	Vai su Jenkins > New Item > Pipeline.
-	•	Dai un nome alla pipeline e seleziona il tipo “Pipeline”.
-2.	Definizione della Pipeline:
-	•	Nella sezione Pipeline, seleziona “Pipeline script from SCM”.
-	•	Configura:
-	•	SCM: Git.
-	•	Repository URL: Il link al tuo repository GitHub.
-	•	Credentials: Seleziona le credenziali github_creds.
-	•	Assicurati che il file Jenkinsfile sia posizionato nella root del repository.
+1. Creazione del Progetto Pipeline:
+- Vai su Jenkins > Nuovo Elemento.
+- Dai un nome alla pipeline e seleziona il tipo “Pipeline”.
+2. Definizione della Pipeline:
+- Nella sezione Pipeline, seleziona “Pipeline script from SCM”.
+- Configura:
+	- SCM: Git.
+	- Repository URL: Il link al tuo repository GitHub.
+	- Credenziali: Seleziona le credenziali github_creds.
+ 	- Ramo: */main
+ - Assicurati che il Jenkinsfile sia posizionato nella root del repository, insieme ai vari file mostrati all'inizio.
 
 3. **Esegui la Pipeline**:
 Salva e avvia la pipeline. Controlla che tutte le fasi vengano completate con successo.
@@ -121,13 +120,13 @@ Salva e avvia la pipeline. Controlla che tutte le fasi vengano completate con su
 
 ## Parte 4: Verifica delle operazioni
 
-1.	**Verifica l’immagine costruita**:
+1. **Verifica l’immagine costruita**:
 Dopo l’esecuzione della pipeline, verifica che l’immagine sia stata costruita:
    ```bash
    docker images
    ```
 
-2. **Controlla il Registro Docker**:
+3. **Controlla il Registro Docker**:
 Assicurati che l’immagine sia stata pushata nel registry:
    ```bash
    curl http://localhost:5000/v2/_catalog
