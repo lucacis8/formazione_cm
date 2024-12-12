@@ -101,10 +101,11 @@ Per consentire a Jenkins di accedere al repository GitHub, segui questi passaggi
 ## Parte 3: Configurazione della Pipeline Jenkins
 
 Segui questi passaggi per configurare una semplice pipeline:
-1. Creazione del Progetto Pipeline:
+1. **Creazione del Progetto Pipeline**:
 - Vai su Jenkins > Nuovo Elemento.
 - Dai un nome alla pipeline e seleziona il tipo “Pipeline”.
-2. Definizione della Pipeline:
+
+2. **Definizione della Pipeline**:
 - Nella sezione Pipeline, seleziona “Pipeline script from SCM”.
 - Configura:
 	- SCM: Git.
