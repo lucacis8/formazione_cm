@@ -135,7 +135,7 @@ Dopo l’esecuzione della pipeline, verifica che l’immagine sia stata costruit
    docker images
    ```
 
-3. **Controlla il Registro Docker**:
+2. **Controlla il Registro Docker**:
 
 Assicurati che l’immagine sia stata pushata nel registry:
    ```bash
@@ -154,7 +154,7 @@ Puoi avviare un container basato sull’immagine:
    docker run -d localhost:5000/my-app:<timestamp>
    ```
 
-5. **Debugging**:
+4. **Debugging**:
 
 - **Permission Denied sul Docker Socket**: Verifica i permessi del Docker socket montato nel container Jenkins.
 - **Immagini non disponibili**: Controlla che la fase di push della pipeline non abbia errori.
