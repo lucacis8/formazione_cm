@@ -82,6 +82,9 @@ Modifica i permessi del socket Docker:
 Aggiungi l'utente `jenkins` al gruppo `docker` ed esci:
    ```bash
    usermod -aG docker jenkins
+   ```
+
+   ```bash
    exit
    ```
 
